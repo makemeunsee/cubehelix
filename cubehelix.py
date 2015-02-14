@@ -95,17 +95,18 @@ def cmap(start=0.5, rot=-1.5, gamma=1.0, reverse=False, nlev=256.,
             maxSat = kwargs.get('sat')
 
 # set up the parameters
-    fract = np.linspace(minLight, maxLight, nlev)
-    angle = 2.0 * pi * (start / 3.0 + rot * fract + 1.)
-    fract = fract**gamma
-
+    fract = np.linspace(0., 1., nlev)
+    light = np.linspace(minLight, maxLight, nlev)
     satar = np.linspace(minSat, maxSat, nlev)
-    amp = satar * fract * (1. - fract) / 2.
+    
+    angle = 2.0 * pi * (start / 3.0 + rot * fract + 1.)
+    light = light**gamma
+    amp = satar * light * (1. - light) / 2.
 
 # compute the RGB vectors according to main equations
-    red = fract + amp * (-0.14861 * np.cos(angle) + 1.78277 * np.sin(angle))
-    grn = fract + amp * (-0.29227 * np.cos(angle) - 0.90649 * np.sin(angle))
-    blu = fract + amp * (1.97294 * np.cos(angle))
+    red = light + amp * (-0.14861 * np.cos(angle) + 1.78277 * np.sin(angle))
+    grn = light + amp * (-0.29227 * np.cos(angle) - 0.90649 * np.sin(angle))
+    blu = light + amp * (1.97294 * np.cos(angle))
 
 # find where RBB are outside the range [0,1], clip
     red[np.where((red > 1.))] = 1.
